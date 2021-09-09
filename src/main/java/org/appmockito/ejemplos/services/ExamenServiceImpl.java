@@ -20,7 +20,7 @@ public class ExamenServiceImpl implements ExamenService {
                 .findFirst();
         Examen examen = null;
         if (examenOptional.isPresent()) {
-            examen = examenOptional.orElseThrow();
+            examen = examenOptional.orElse(null);
         }
         return examen;
     }
