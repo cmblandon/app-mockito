@@ -1,7 +1,9 @@
 package org.appmockito.ejemplos.services;
 
 import org.appmockito.ejemplos.dao.ExamenDao;
+import org.appmockito.ejemplos.dao.PreguntaDao;
 import org.appmockito.ejemplos.models.Examen;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -15,10 +17,20 @@ import static org.mockito.Mockito.when;
 
 class ExamenServiceImplTest {
 
+    ExamenDao examenDao;
+    ExamenService service;
+    PreguntaDao preguntaDao;
+
+    @BeforeEach
+    void setUp() {
+        examenDao = mock(ExamenDao.class);
+        preguntaDao = mock(PreguntaDao.class);
+        service = new ExamenServiceImpl(examenDao, preguntaDao);
+    }
+
     @Test
     void findExamenPorNombre() {
-        ExamenDao examenDao = mock(ExamenDao.class);
-        ExamenService service = new ExamenServiceImpl(examenDao);
+
         List<Examen> datos = Arrays.asList(new Examen(5L, "Matemáticas"), new Examen(6L, "Lenguaje"),
                 new Examen(7L, "Historia"));
         when(examenDao.findAll()).thenReturn(datos);
@@ -30,13 +42,9 @@ class ExamenServiceImplTest {
 
     @Test
     void findExamenPorNombreListaVacia() {
-        ExamenDao examenDao = mock(ExamenDao.class);
-        ExamenService service = new ExamenServiceImpl(examenDao);
         List<Examen> datos = Collections.emptyList();
         when(examenDao.findAll()).thenReturn(datos);
         Optional<Examen> examen = service.findExamenPorNombre("Matemáticas");
-        assertTrue(examen.isPresent());
-        assertEquals(5, examen.orElseThrow(ArithmeticException::new).getId());
-        assertEquals("Matemáticas", examen.get().getNombre());
+        assertFalse(examen.isPresent());
     }
 }
