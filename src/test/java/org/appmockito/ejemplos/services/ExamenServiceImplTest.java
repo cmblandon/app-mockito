@@ -3,12 +3,10 @@ package org.appmockito.ejemplos.services;
 import org.appmockito.ejemplos.dao.ExamenDao;
 import org.appmockito.ejemplos.dao.PreguntaDao;
 import org.appmockito.ejemplos.models.Examen;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -83,5 +81,18 @@ class ExamenServiceImplTest {
         assertNull(examen);
         verify(examenDao).findAll();
         verify(preguntaDao).findPreguntasPorExamenId(5L);
+    }
+
+    @Test
+    void testGuardarExamen() {
+        Examen newExamen = Datos.EXAMEN;
+        newExamen.setPreguntas(Datos.PREGUNTAS);
+        when(examenDao.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        Examen examen = service.guardar(newExamen);
+        assertNotNull(examen.getId());
+        assertEquals(8L, examen.getId());
+        assertEquals("Física", examen.getNombre());
+        verify(examenDao).guardar(any(Examen.class));
+        verify(preguntaDao).guardarVarias(anyList());
     }
 }
