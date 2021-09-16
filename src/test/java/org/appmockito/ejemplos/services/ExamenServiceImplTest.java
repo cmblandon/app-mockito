@@ -5,6 +5,11 @@ import org.appmockito.ejemplos.dao.PreguntaDao;
 import org.appmockito.ejemplos.models.Examen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,18 +19,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ExamenServiceImplTest {
-
+    @Mock
     ExamenDao examenDao;
-    ExamenService service;
+    @Mock
     PreguntaDao preguntaDao;
 
-    @BeforeEach
+    @InjectMocks
+    ExamenServiceImpl service;
+
+    /*@BeforeEach -> este meétodo lo remplaza la anotación @ExtendWith(MockitoExtension.class)
+
     void setUp() {
-        examenDao = mock(ExamenDao.class);
+        MockitoAnnotations.openMocks(this);
+       /* examenDao = mock(ExamenDao.class);
         preguntaDao = mock(PreguntaDao.class);
         service = new ExamenServiceImpl(examenDao, preguntaDao);
-    }
+    }*/
 
     @Test
     void findExamenPorNombre() {
