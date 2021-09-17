@@ -113,4 +113,16 @@ class ExamenServiceImplTest {
         verify(examenDao).guardar(any(Examen.class));
         verify(preguntaDao).guardarVarias(anyList());
     }
+
+    @Test
+    void testManejoExcception() {
+        when(examenDao.findAll()).thenReturn(Datos.EXAMENES_ID_NULL);
+        when(preguntaDao.findPreguntasPorExamenId(isNull())).thenThrow(IllegalArgumentException.class);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.findExamenPorNombreConPreguntas("matemáticas");
+        });
+        assertEquals(IllegalArgumentException.class, exception.getClass());
+        verify(examenDao).findAll();
+        verify(preguntaDao).findPreguntasPorExamenId(null);
+    }
 }
