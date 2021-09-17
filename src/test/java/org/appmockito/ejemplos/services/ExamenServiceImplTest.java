@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 import java.util.Collections;
 import java.util.List;
@@ -85,10 +87,26 @@ class ExamenServiceImplTest {
 
     @Test
     void testGuardarExamen() {
+        //Give
         Examen newExamen = Datos.EXAMEN;
         newExamen.setPreguntas(Datos.PREGUNTAS);
-        when(examenDao.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        //when(examenDao.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        //the commented sentence is replaced by a autoincremental id.
+        when(examenDao.guardar(any(Examen.class))).then(new Answer<Examen>() {
+
+            Long secuencia = 8L;
+
+            @Override
+            public Examen answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Examen examen = invocationOnMock.getArgument(0);
+                examen.setId(secuencia++);
+                return examen;
+            }
+        });
+
+        //When
         Examen examen = service.guardar(newExamen);
+        //Then
         assertNotNull(examen.getId());
         assertEquals(8L, examen.getId());
         assertEquals("Física", examen.getNombre());

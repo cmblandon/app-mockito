@@ -10,6 +10,6 @@ public class Datos {
             new Examen(7L, "Historia"));
 
     public static final List<String> PREGUNTAS = Arrays.asList("aritmética", "integrales", "derivadas", "trigonomentría", "geometría");
-    public static final Examen EXAMEN = new Examen(8L, "Física");
+    public static final Examen EXAMEN = new Examen(null, "Física");
 
 }
